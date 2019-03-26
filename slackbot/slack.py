@@ -5,6 +5,17 @@ from slackclient import SlackClient
 SLACK_BOT_TOKEN = os.environ.get('SLACK_BOT_TOKEN')
 SLACK_USER_ACCESS_TOKEN = os.environ.get('SLACK_USER_ACCESS_TOKEN')
 
+COFFEE_SLACK_CHANNEL = "coffee"
+COFFEE_UPDATE_INTERVAL_IN_MS = 10000
+
+COFFEE_FULL_THRESHOLD = 5000
+COFFEE_EMPTY_OR_LOW_THRESHOLD = 0
+COFFEE_FULL_FILENAME = "coffee-full.png"
+COFFEE_FULL_MESSAGE = "*HOT COFFEE IS READY!*"
+COFFEE_NEEDS_ATTENTION_FILENAME = "coffee-low.png"
+COFFEE_NEEDS_ATTENTION_MESSAGE = "**** *WARNING! COFFEE POT IS LOW OR EMPTY* ****"
+
+
 class SlackAPIClient(object):
     def __init__(self):
         self.bot_client = SlackClient(SLACK_BOT_TOKEN)
@@ -40,7 +51,7 @@ class SlackAPIClient(object):
 
     def get_all_users(self):
         return self.bot_client.api_call("users.list")
-    
+
     def get_user_id(self, user_name):
         users = self.get_all_users()['members']
         for user in users:
@@ -48,7 +59,6 @@ class SlackAPIClient(object):
                 return user["id"]
         return ""
 
-    
     def get_channel_id(self, channel_name):
         channel_id = None
         channels = self.bot_client.api_call("channels.list")["channels"]
@@ -72,47 +82,47 @@ class SlackAPIClient(object):
     def upload_file_to_user(self):
         pass
 
-def update():
-    # TODO:
-    #     1) Check reading from device & if reading > threshold display message && hasn't notified channel about this
-    slackClient.send_message(COFFEE_SLACK_CHANNEL, "Wali/Glen Coffee Bot v1.0")
-    return
+
+def get_weight():
+    return 0 # TODO: Implement this
+
+
+def is_level_low():
+    return weight <= COFFEE_EMPTY_OR_LOW_THRESHOLD
+
+
+def is_level_high():
+    return weight >= COFFEE_FULL_THRESHOLD
+
 
 def notify_full():
-    channel = slackClient.get_channel_id(COFFEE_SLACK_CHANNEL)
-    slackClient.upload_file_to_channel(channel, COFFEE_FULL_FILENAME)
+    slackClient.upload_file_to_channel(channelId, COFFEE_FULL_FILENAME)
+    slackClient.send_message(channelId, COFFEE_FULL_MESSAGE)
+
 
 def notify_empty():
-    channel = slackClient.get_channel_id(COFFEE_SLACK_CHANNEL)
-    slackClient.upload_file_to_channel(channel, COFFEE_NEEDS_ATTENTION_FILENAME)
+    slackClient.upload_file_to_channel(channelId, COFFEE_NEEDS_ATTENTION_FILENAME)
+    slackClient.send_message(channelId, COFFEE_NEEDS_ATTENTION_MESSAGE)
 
-
-COFFEE_FULL_THRESHOLD = 50000000
-COFFEE_EMPTY_OR_LOW_THRESHOLD = 0
-COFFEE_FULL_FILENAME = "coffee-full.png"
-COFFEE_NEEDS_ATTENTION_FILENAME="coffee-low.png"
-
-COFFEE_SLACK_CHANNEL = "coffee"
-COFFEE_UPDATE_INTERVAL_IN_MS = 10000
 
 slackClient = SlackAPIClient()
+channelId = slackClient.get_channel_id(COFFEE_SLACK_CHANNEL)
+
+is_high = True
+is_low = False
+weight = 0
 
 while True:
-    #
-    # read scale, if reading is empty or full, send notification.
-    #
-    # var weight = get_weight();
-    # if (IsLow(weight) && is_high)     if is_high initial value is true
-    #    is_high = false;
-    #    is_low = true
-    #    notify_empty();
-    #
-    # if (IsHigh(weight) && is_low)
-    #    is_low = false;
-    #    is_high = true;
-    #    notify_full();
-    #
+    weight = get_weight()
 
+    if is_level_low():
+        is_high = False
+        is_low = True
+        notify_empty()
 
+    if is_level_high():
+        is_low = False
+        is_high = True
+        notify_full()
 
     time.sleep(COFFEE_UPDATE_INTERVAL_IN_MS)
