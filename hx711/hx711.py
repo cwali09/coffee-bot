@@ -30,7 +30,7 @@ class HX711:
 
         self.OFFSET = 1
         self.OFFSET_B = 1
-        self.lastVal = long(0)
+        self.lastVal = int(0)
 
         self.DEBUG_PRINTING = False
 
@@ -144,7 +144,7 @@ class HX711:
 
 
         if self.DEBUG_PRINTING:
-            print dataBytes,
+            print(dataBytes),
         
         # Join the raw bytes into a single 24bit 2s complement value.
         twosComplementValue = ((dataBytes[0] << 16) |
@@ -152,7 +152,7 @@ class HX711:
                                dataBytes[2])
 
         if self.DEBUG_PRINTING:
-            print "Twos: 0x%06x" % twosComplementValue
+            print("Twos: 0x%06x" % twosComplementValue)
         
         # Convert from 24bit twos-complement to a signed value.
         signedIntValue = self.convertFromTwosComplement24bit(twosComplementValue)
@@ -161,7 +161,7 @@ class HX711:
         self.lastVal = signedIntValue
 
         # Return the sample value we've read from the HX711.
-        return long(signedIntValue)
+        return int(signedIntValue)
 
     
     def read_average(self, times=3):
@@ -216,7 +216,7 @@ class HX711:
 
        # If times is odd we can just take the centre value.
        if (times & 0x1) == 0x1:
-          return valueList[len(valueList) / 2] 
+          return valueList[int(len(valueList) / 2)] 
        else:
           # If times is even we have to take the arithmetic mean of
           # the two middle values.
@@ -270,7 +270,7 @@ class HX711:
         value = self.read_average(times)
 
         if self.DEBUG_PRINTING:
-            print "Tare A value:", value
+            print("Tare A value:", value)
         
         self.set_offset_A(value)
 
@@ -292,7 +292,7 @@ class HX711:
         value = self.read_average(times)
 
         if self.DEBUG_PRINTING:
-            print "Tare B value:", value
+            print("Tare B value:", value)
         
         self.set_offset_B(value)
 
