@@ -84,7 +84,11 @@ class SlackAPIClient(object):
 
 
 def get_weight():
-    return 0 # TODO: Implement this
+    # TODO: Implement this, queue up 20 values and take average of them
+        # And see if each value is within 20,000 of the other before 
+        # taking the average, if not, trash the whole queue and restart. (Means someone is pumping)
+
+    return 0
 
 
 def is_level_low():
@@ -112,6 +116,9 @@ is_high = True
 is_low = False
 weight = 0
 
+# TODO:
+    # New up the HX711 then tare it
+    
 while True:
     weight = get_weight()
 
