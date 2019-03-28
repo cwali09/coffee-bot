@@ -1,14 +1,12 @@
 import os
-import time
+import settings
 from slackclient import SlackClient
 
-SLACK_BOT_TOKEN = os.environ.get('SLACK_BOT_TOKEN')
-SLACK_USER_ACCESS_TOKEN = os.environ.get('SLACK_USER_ACCESS_TOKEN')
 
-class SlackAPIClient(object):
+class SlackbotClient(object):
     def __init__(self):
-        self.bot_client = SlackClient(SLACK_BOT_TOKEN)
-        self.user_client = SlackClient(SLACK_USER_ACCESS_TOKEN)
+        self.bot_client = SlackClient(settings.SLACK_BOT_TOKEN)
+        self.user_client = SlackClient(settings.SLACK_USER_ACCESS_TOKEN)
 
     def get_bot_auth_token(self):
         return os.environ.get('SLACK_BOT_TOKEN')
@@ -70,58 +68,3 @@ class SlackAPIClient(object):
 
     def upload_file_to_user(self):
         pass
-
-'''
-
-def get_weight():
-    # TODO: Implement this, queue up 20 values and take average of them
-        # And see if each value is within 20,000 of the other before 
-        # taking the average, if not, trash the whole queue and restart. (Means someone is pumping)
-
-    return 0
-
-
-def is_level_low():
-    return weight <= COFFEE_EMPTY_OR_LOW_THRESHOLD
-
-
-def is_level_high():
-    return weight >= COFFEE_FULL_THRESHOLD
-
-
-def notify_full():
-    slackClient.upload_file_to_channel(channelId, COFFEE_FULL_FILENAME)
-    slackClient.send_message(channelId, COFFEE_FULL_MESSAGE)
-
-
-def notify_empty():
-    slackClient.upload_file_to_channel(channelId, COFFEE_NEEDS_ATTENTION_FILENAME)
-    slackClient.send_message(channelId, COFFEE_NEEDS_ATTENTION_MESSAGE)
-
-
-slackClient = SlackAPIClient()
-channelId = slackClient.get_channel_id(COFFEE_SLACK_CHANNEL)
-
-is_high = True
-is_low = False
-weight = 0
-
-# TODO:
-    # New up the HX711 then tare it
-    
-while True:
-    weight = get_weight()
-
-    if is_level_low():
-        is_high = False
-        is_low = True
-        notify_empty()
-
-    if is_level_high():
-        is_low = False
-        is_high = True
-        notify_full()
-
-    time.sleep(COFFEE_UPDATE_INTERVAL_IN_MS)
-
-'''
