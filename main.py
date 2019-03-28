@@ -35,7 +35,7 @@ def cleanup():
     sys.exit()
 
 
-print(f'Coffeebot v{settings.VERSION} by Wali and Glen')
+print("Coffeebot v%s by Wali and Glen" % settings.VERSION)
 
 slackbotClient = SlackbotClient()
 channelId = slackbotClient.get_channel_id(settings.COFFEE_SLACK_CHANNEL)
@@ -57,7 +57,7 @@ print("Coffeebot started.")
 
 while True:
     try:
-        weight = get_weight()
+        weight = get_weight(45)
 
         print(weight)
 
