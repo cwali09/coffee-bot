@@ -8,7 +8,7 @@ from slackbot import SlackbotClient
 
 
 def get_weight():
-    return hx.get_steady_weight()
+    return hx.get_steady_weight(45)
 
 
 def is_level_low():
@@ -57,7 +57,7 @@ print("Coffeebot started.")
 
 while True:
     try:
-        weight = get_weight(45)
+        weight = get_weight()
 
         print(weight)
 
