@@ -219,7 +219,7 @@ class HX711:
         values = []
 
         for time in range(times):
-            values.append(self.read_long())
+            values.append(self.get_weight_A(1))
 
         values.sort()
 

@@ -35,7 +35,7 @@ def cleanup():
     sys.exit()
 
 
-print("Coffeebot %s by Wali and Glen", settings.VERSION)
+print(f'Coffeebot v{settings.VERSION} by Wali and Glen')
 
 slackbotClient = SlackbotClient()
 channelId = slackbotClient.get_channel_id(settings.COFFEE_SLACK_CHANNEL)
@@ -48,12 +48,18 @@ hx = HX711(5, 6)
 hx.set_reading_format("MSB", "MSB")
 hx.set_reference_unit(1)
 hx.reset()
-hx.tare()
+
 print("Taring scale... make sure nothing is on it.")
+hx.tare()
+print("Tare complete...")
+print("Coffeebot started.")
+
 
 while True:
     try:
         weight = get_weight()
+
+        print(weight)
 
         if weight == -1:
             continue
